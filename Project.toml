@@ -1,0 +1,13 @@
+name = "SphericalGraphEmbedding"
+uuid = "abe9faeb-2622-484d-8e33-db466c9fd899"
+authors = ["Michaël Fanuel <mrfanuel@hotmail.fr> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1.6"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
