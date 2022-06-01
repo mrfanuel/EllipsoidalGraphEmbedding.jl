@@ -31,7 +31,7 @@ function acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64
     obj::Float64 = 1.0
     r::Float64 = 0.0
 
-    while (i <= n_it) && (diff > t || i < 4)
+    while (i <= n_it) && (diff > tol || i < 4)
 
         # Matrix product
         Y = A * X - (d / s) * (d' * X) + Diagonal(f) * X
