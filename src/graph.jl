@@ -1,4 +1,4 @@
-@doc raw"""
+"""
     find_community_membership(x_embed, R0)
 
 returns the index of the closet centroid to each position vector.
@@ -189,7 +189,7 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
 
 end
 
-@doc raw"""
+"""
     update_centroids(S, R0, community)
 
 returns a clustering of the embedded nodes.

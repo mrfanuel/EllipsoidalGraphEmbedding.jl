@@ -1,4 +1,4 @@
-@doc raw"""
+"""
     rename_com_unique(community)
 
 rename the community labels by the smallest labels of integers.
