@@ -1,12 +1,12 @@
 
-function find_community_membership(Sig::AbstractArray{Float64,2}, R0::Array{Float64,2})
+function find_community_membership(x_embed::AbstractArray{Float64,2}, R0::Array{Float64,2})
 
-    N::Int64 = size(Sig, 2)
+    N::Int64 = size(x_embed, 2)
     id::Int64 = 0
     community = vec(zeros(Int64, 1, N))
 
     for i = 1:N
-        @inbounds si = R0' * Sig[:, i]
+        @inbounds si = R0' * x_embed[:, i]
         _, id = findmax(si)
         @inbounds community[i] = id
     end
@@ -17,29 +17,29 @@ end
 
 
 
-function partition(A::SparseMatrixCSC{Int64,Int64}, Sig::AbstractArray{Float64,2}, it_max::Int64, n_clu::Int64, p::Array{Float64,1})
+function partition(A::SparseMatrixCSC{Int64,Int64}, x_embed::AbstractArray{Float64,2}, it_max::Int64, n_clu::Int64, p::Array{Float64,1})
 
     # Initialization
     d::Array{Int64,2} = sum(A, dims=2)
     s::Int64 = sum(d)
 
     #Number of nodes
-    N::Int64 = size(Sig, 2)
+    N::Int64 = size(x_embed, 2)
 
     # Random points as seeds for communities
     index = random_generate_vec(p, n_clu) #index = rand(1:N,n_clu);
 
-    R0 = Sig[:, index]
-    dim::Int64 = size(Sig, 1)
+    R0 = x_embed[:, index]
+    dim::Int64 = size(x_embed, 1)
 
     ## Construct the initial communities and centroid vectors
 
     # Here is the first iteration
-    community = find_community_membership(Sig, R0)# Gives as many communities as nodes
+    community = find_community_membership(x_embed, R0)# Gives as many communities as nodes
 
     # Then, we update the centroids
     R = zeros(Float64, dim, n_clu)
-    R, community = update_centroids(Sig, R0, community)
+    R, community = update_centroids(x_embed, R0, community)
 
 
     ## Update until stationarity
@@ -55,7 +55,7 @@ function partition(A::SparseMatrixCSC{Int64,Int64}, Sig::AbstractArray{Float64,2
     Q_best = (1 / s) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / s)
 
     for _ = 1:it_max
-        R1, community1 = update_centroids(Sig, R, community)
+        R1, community1 = update_centroids(x_embed, R, community)
         community1 = rename_com_unique(vec(community1))
         n_c = length(unique(community1))
         H_lab = sparse(1:N, community1, vec(ones(Int64, N, 1)), N, n_c)
@@ -96,11 +96,11 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
     dim::Int64 = length(S)
     println("dimension of embedding used for clustering: ",dim)
 
-    Sig = zeros(dim, N)
+    x_embed = zeros(dim, N)
     if shape == "Spherical"
-        Sig = (U[:, 1:dim] * diagm((S[1:dim])))'
+        x_embed = (U[:, 1:dim] * diagm((S[1:dim])))'
     elseif shape == "Ellipsoidal"
-        Sig = (U[:, 1:dim])'
+        x_embed = (U[:, 1:dim])'
     end
 
     Q_best::Float64 = 0
@@ -111,12 +111,13 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
     p = vec(d / s)
     n_updates_best::Int64 = 0
 
-    # keep partition with best modularity
+    ## keep partition with best modularity
 
-    community, Q, n_updates = partition(A, Sig, n_updates, n_clusters, p)
+    # initialization
+    community, Q, n_updates = partition(A, x_embed, n_updates, n_clusters, p)
 
     for _ = 1:n_it_Kmeans
-        community0, Q, n_updates = partition(A, Sig, n_updates, n_clusters, p)
+        community0, Q, n_updates = partition(A, x_embed, n_updates, n_clusters, p)
         n_c = length(unique(community0))
         if Q > Q_best
             community = community0
@@ -140,7 +141,7 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
     println((S[1:5] .^ 2) / N)
     println(" -------------------------------------------- ")
 
-    return Sig, community
+    return x_embed, community
 
 end
 
