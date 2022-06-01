@@ -1,3 +1,14 @@
+"""
+    rename_com_unique(community)
+
+rename the community labels by the smallest labels of integers.
+# Arguments
+- `community::Array{Int64,1}` array of integers
+
+# Output
+- `community::Array{Int64,1}` renamed array of integers
+
+"""
 function rename_com_unique(community::Array{Int64,1})
 
     N = length(community)

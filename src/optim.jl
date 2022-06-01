@@ -1,6 +1,6 @@
 
 """
-    acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64,2}, n_it::Int64, t::Float64)
+    acc_proj_power_method(A, X, n_it, tol)
 
 Runs the accelarated projected power iteration on the modularity matrix.
 
@@ -8,12 +8,12 @@ Runs the accelarated projected power iteration on the modularity matrix.
 - `A::SparseMatrixCSC{Int64,Int64}` sparse graph adjacency matrix.
 - `X::Array{Float64,2}` initial matrix.
 - `n_it::Int64` maximum number of iterations.
-- `t::Float64` tolerance on relative variation of consecutive objective values.
+- `tol::Float64` tolerance on relative variation of consecutive objective values.
 # Output
-- `X::Array{Float64,2}: approximate stationary matrix of the iteration.
+- `X::Array{Float64,2}` approximate stationary matrix of the iteration.
 
 """
-function acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64,2}, n_it::Int64, t::Float64)
+function acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64,2}, n_it::Int64, tol::Float64)
 
     d::Array{Int64,2} = sum(A, dims=2)
     s::Float64 = sum(d)
@@ -48,7 +48,7 @@ function acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64
         X = X - r * Y0
 
         #Project on the sphere
-        X = X./sqrt.(sum(abs2, X, dims=2))
+        X = X ./ sqrt.(sum(abs2, X, dims=2))
 
         #Update objective and momentum
         obj_0 = obj
@@ -57,10 +57,10 @@ function acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64
     end
 
     # Output
-    if diff < t
-        println("The iteration has become stationary after ", i,  " iterations")
+    if diff < tol
+        println("The iteration has become stationary after ", i, " iterations")
     else
-        println("The iteration did not converge after ",i," iterations")
+        println("The iteration did not converge after ", i, " iterations")
         println("The relative difference between the last objective values", diff)
     end
 
