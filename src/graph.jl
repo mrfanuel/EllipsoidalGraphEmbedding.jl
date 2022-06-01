@@ -27,8 +27,9 @@ function partition(A::SparseMatrixCSC{Int64,Int64}, x_embed::AbstractArray{Float
     N::Int64 = size(x_embed, 2)
 
     # Random points as seeds for communities
-    index = random_generate_vec(p, n_clu) #index = rand(1:N,n_clu);
-
+    #index = random_generate_vec(p, n_clu) #index = rand(1:N,n_clu);
+    index = rand(Categorical(p), n_clu)
+    
     R0 = x_embed[:, index]
     dim::Int64 = size(x_embed, 1)
 
