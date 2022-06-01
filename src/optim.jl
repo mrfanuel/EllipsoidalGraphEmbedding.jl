@@ -1,29 +1,3 @@
-function ConstantPreprocess(A::SparseMatrixCSC{Int64,Int64},d::Array{Int64,2},s::Float64,fast::Int64)
-
-    N::Int64 = length(d); 
-    v = rand(Uniform(-1,1),N,1);
-    v = v/norm(v,2);
-    f::Float64 = 0.;
-    n::Float64 = 0.;
-    
-    if fast==1
-        for it = 1:30
-    
-            v = A*v .- (d/s)*(d'*v);
-            n = norm(v,2);
-            v = v/n;
-        end
-        f = n;
-    else
-        lam = eigs(A-(d/s)*d',nev=1);
-        f = real(lam[1][1]);
-    end
-    
-    return f
-    end
-    
-
-
 # Input: 
 #
 # A : sparse adjacency matrix N x N
@@ -36,73 +10,58 @@ function ConstantPreprocess(A::SparseMatrixCSC{Int64,Int64},d::Array{Int64,2},s:
 # Output:
 #
 # X : a feasible matrix N x r0
-#########################################################
 
-function AccProjPowMethodPreProcessed(A::SparseMatrixCSC{Int64,Int64},X::Array{Float64,2},n_it::Int64,t::Float64,fast::Int64)
-   
-d::Array{Int64,2} = sum(A,dims=2);
-s::Float64 = sum(d);
+function acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64,2}, n_it::Int64, t::Float64, fast::Int64)
 
-# Initialization
-N::Int64 = size(X,1);
+    d::Array{Int64,2} = sum(A, dims=2)
+    s::Float64 = sum(d)
 
-f = vec(1 .+ 2*d -(d.^2)/s);
+    # Initialization
+    f = vec(1 .+ 2 * d - (d .^ 2) / s)
 
-i::Int64 = 1;
-diff::Float64 = 10.;
+    i::Int64 = 1
+    diff::Float64 = 10.0
 
-Y0::Array{Float64,2} = zeros(size(X));
-Y::Array{Float64,2} = zeros(size(X));
+    Y0::Array{Float64,2} = zeros(size(X))
+    Y::Array{Float64,2} = zeros(size(X))
 
-o0::Float64 = 1.;
-o::Float64 = 1.;
-r::Float64 = 0.;
+    o0::Float64 = 1.0
+    o::Float64 = 1.0
+    r::Float64 = 0.0
 
-while (i<=n_it)  && (diff >t || i<4)	
+    while (i <= n_it) && (diff > t || i < 4)
 
-   # Matrix product
-   Y = A*X-(d/s)*(d'*X)+Diagonal(f)*X;
-   # In order to avoid calculating twice the same products
-   # Since X is feasible, we calculate the objective value AFTER the first matrix product.
-   o=(tr(X'*Y))/s;  
+        # Matrix product
+        Y = A * X - (d / s) * (d' * X) + Diagonal(f) * X
+        # In order to avoid calculating twice the same products
+        # Since X is feasible, we calculate the objective value AFTER the first matrix product.
+        o = (tr(X' * Y)) / s
 
-   #Difference between consecutive objectives
-   diff = abs.(o-o0)/o0; 
+        #Difference between consecutive objectives
+        diff = abs.(o - o0) / o0
 
-   #Update with momentum
-   r = (i-1.)/(i+2.);
-   X = (1 +r)*Y;
-   X = X - r*Y0;
+        #Update with momentum
+        r = (i - 1.0) / (i + 2.0)
+        X = (1 + r) * Y
+        X = X - r * Y0
 
-   #Project on the sphere
-   X = ProjectSphere(X); #X = X./sqrt.(sum(abs2, X, 2));
+        #Project on the sphere
+        X = X./sqrt.(sum(abs2, X, dims=2))
 
-   #Update objective and momentum
-   o0 = o;
-   Y0 = Y;
+        #Update objective and momentum
+        o0 = o
+        Y0 = Y
+        i += 1
+    end
 
-#	if mod(i,50)==0
-	#	print("iteration: ")
-	#	print(i)
-	#	print("\n")
-#	end
+    # Output
+    if diff < t
+        println("The iteration has become stationary after ", i,  " iterations")
+    else
+        println("The iteration did not converge after ",i," iterations")
+        println("The relative difference between the last objective values", diff)
+    end
 
-   i+=1;
 
-
+    return X
 end
-
-
-
-# Output
-if diff<t
-  	@printf "The iteration has become stationary after %d iterations\n" i;
-else
-	@printf "The iteration did not converge after %d iterations\n" n_it;
-	@printf "The relative difference between the last objective values %f \n" diff;
-end
-
-
-return X;
-end
-################################################################
