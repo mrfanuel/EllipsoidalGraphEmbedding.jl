@@ -1,17 +1,19 @@
-# Input: 
-#
-# A : sparse adjacency matrix N x N
-# H0 : feasible initial matrix N x r0
-# n_it : maximum number of iterations
-# t : tolerance (used for assessing the stationarity of the sequence of iterates).
-# fast: if ==1 this option approximates the largest eigenvalue of the modularity matrix (for large matrices)
-# fast: if ==0 this option calculates the largest eigenvalue of the modularity matrix (for small matrices)
-#
-# Output:
-#
-# X : a feasible matrix N x r0
 
-function acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64,2}, n_it::Int64, t::Float64, fast::Int64)
+"""
+    acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64,2}, n_it::Int64, t::Float64)
+
+Runs the accelarated projected power iteration on the modularity matrix.
+
+# Arguments
+- `A::SparseMatrixCSC{Int64,Int64}` sparse graph adjacency matrix.
+- `X::Array{Float64,2}` initial matrix.
+- `n_it::Int64` maximum number of iterations.
+- `t::Float64` tolerance on relative variation of consecutive objective values.
+# Output
+- `X::Array{Float64,2}: approximate stationary matrix of the iteration.
+
+"""
+function acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64,2}, n_it::Int64, t::Float64)
 
     d::Array{Int64,2} = sum(A, dims=2)
     s::Float64 = sum(d)

@@ -90,8 +90,7 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
 
 
     println(" ------- Acc Projected Power Iteration -------")
-    fast::Int64 = 1
-    H0 = @time acc_proj_power_method(A, H0, n_it_PPM, t, fast)
+    H0 = @time acc_proj_power_method(A, H0, n_it_PPM, t)
     U, S, _ = svd(H0)
     println(" -------------- Clustering ------- ")
     dim::Int64 = length(S)
@@ -132,7 +131,7 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
 
     print("Number of updates: ")
     println(n_updates_best)
-    
+
     print("Number of communities: ")
     println(n_c_best)
 
