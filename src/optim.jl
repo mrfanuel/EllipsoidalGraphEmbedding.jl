@@ -1,5 +1,5 @@
 
-"""
+@doc raw"""
     acc_proj_power_method(A, X, n_it, tol)
 
 Runs the accelarated projected power iteration on the modularity matrix.
