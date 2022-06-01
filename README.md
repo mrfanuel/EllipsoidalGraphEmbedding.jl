@@ -9,7 +9,7 @@
 ### Documentation
 This is the code associated with the manuscript 
 [Spherical Embedding of graphs](https://github.com/mrfanuel/SphericalGraphEmbedding.jl)
-by [Michaël Fanuel](https://mrfanuel.github.io/) , Antoine Aspeel, Michael Schaub and Jean-Charles Delvenne.
+by [Michaël Fanuel](https://mrfanuel.github.io/) , [Antoine Aspeel](https://scholar.google.com/citations?user=EDDQMfgAAAAJ&hl=en), [Michael Schaub](https://michaelschaub.github.io/) and [Jean-Charles Delvenne](https://perso.uclouvain.be/jean-charles.delvenne/welcome.html).
 ### Install Julia
 
 If you do not have Julia installed, please visit [julialang.org](https://julialang.org/learning/getting-started/)
