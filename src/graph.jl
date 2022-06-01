@@ -29,7 +29,7 @@ function partition(A::SparseMatrixCSC{Int64,Int64}, x_embed::AbstractArray{Float
     # Random points as seeds for communities
     #index = random_generate_vec(p, n_clu) #index = rand(1:N,n_clu);
     index = rand(Categorical(p), n_clu)
-    
+
     R0 = x_embed[:, index]
     dim::Int64 = size(x_embed, 1)
 
@@ -132,6 +132,7 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
 
     print("Number of updates: ")
     println(n_updates_best)
+    
     print("Number of communities: ")
     println(n_c_best)
 

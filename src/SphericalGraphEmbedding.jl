@@ -5,6 +5,7 @@ using SparseArrays
 using LinearAlgebra
 using MatrixNetworks
 using BenchmarkTools
+using Random
 
 include("utils.jl")
 include("graph.jl")
@@ -12,8 +13,6 @@ include("optim.jl")
 
 
 export
-    random_generate,
-    random_generate_vec,
     rename_com_unique,
     partition,
     sphere_embed_cluster,
