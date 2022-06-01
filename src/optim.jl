@@ -25,8 +25,8 @@ function acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64
     Y0::Array{Float64,2} = zeros(size(X))
     Y::Array{Float64,2} = zeros(size(X))
 
-    o0::Float64 = 1.0
-    o::Float64 = 1.0
+    obj_0::Float64 = 1.0
+    obj::Float64 = 1.0
     r::Float64 = 0.0
 
     while (i <= n_it) && (diff > t || i < 4)
@@ -35,10 +35,10 @@ function acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64
         Y = A * X - (d / s) * (d' * X) + Diagonal(f) * X
         # In order to avoid calculating twice the same products
         # Since X is feasible, we calculate the objective value AFTER the first matrix product.
-        o = (tr(X' * Y)) / s
+        obj = (tr(X' * Y)) / s
 
         #Difference between consecutive objectives
-        diff = abs.(o - o0) / o0
+        diff = abs.(obj - obj_0) / obj_0
 
         #Update with momentum
         r = (i - 1.0) / (i + 2.0)
@@ -49,7 +49,7 @@ function acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64
         X = X./sqrt.(sum(abs2, X, dims=2))
 
         #Update objective and momentum
-        o0 = o
+        obj_0 = obj
         Y0 = Y
         i += 1
     end
