@@ -13,7 +13,7 @@ Runs the accelarated projected power iteration on the modularity matrix.
 - `X::Array{Float64,2}` approximate stationary matrix of the iteration.
 
 """
-function acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64,2}, n_it::Int64, tol::Float64)
+function acc_proj_power_method(A::SparseMatrixCSC{Int64,Int64}, X::Array{Float64,2}, n_it::Int64, tol::Float64)::Array{Float64,2}
 
     d::Array{Int64,2} = sum(A, dims=2)
     s::Float64 = sum(d)
