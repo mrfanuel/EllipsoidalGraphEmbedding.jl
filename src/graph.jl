@@ -9,7 +9,7 @@ returns the index of the closet centroid to each position vector.
 - `community::Array{Int64,1}` membership array
 
 """
-function find_community_membership(x_embed::AbstractArray{Float64,2}, R0::Array{Float64,2})
+function find_community_membership(x_embed::AbstractArray{Float64,2}, R0::Array{Float64,2})::Array{Int64,1}
 
     N::Int64 = size(x_embed, 2)
     id::Int64 = 0
