@@ -1,7 +1,7 @@
 # SphericalGraphEmbedding
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://mrfanuel.github.io/SphericalGraphEmbedding.jl/stable)
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://github.com/mrfanuel/SphericalGraphEmbedding.jl/tree/gh-pages/dev/index.html)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://mrfanuel.github.io/SphericalGraphEmbedding.jl/dev)
 [![Build Status](https://github.com/mrfanuel/SphericalGraphEmbedding.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/mrfanuel/SphericalGraphEmbedding.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/mrfanuel/SphericalGraphEmbedding.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/mrfanuel/SphericalGraphEmbedding.jl)
 
@@ -10,7 +10,6 @@
 This is the code associated with the manuscript 
 [Spherical Embedding of graphs](https://github.com/mrfanuel/SphericalGraphEmbedding.jl)
 by [Michaël Fanuel](https://mrfanuel.github.io/) , [Antoine Aspeel](https://scholar.google.com/citations?user=EDDQMfgAAAAJ&hl=en), [Michael Schaub](https://michaelschaub.github.io/) and [Jean-Charles Delvenne](https://perso.uclouvain.be/jean-charles.delvenne/welcome.html).
-
 
 ### Install Julia
 
