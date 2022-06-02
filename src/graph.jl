@@ -43,7 +43,7 @@ returns a clustering of the embedded nodes.
 - `n_updates::Float64` number of centroid updates to reach stationarity
 
 """
-function partition(A::SparseMatrixCSC{Int64,Int64}, x_embed::AbstractArray{Float64,2}, it_max::Int64, n_clusters::Int64, p::Array{Float64,1})
+function partition(A::SparseMatrixCSC{Int64,Int64}, x_embed::AbstractArray{Float64,2}, it_max::Int64, n_clusters::Int64, p::Array{Float64,1})::Tuple{Array{Int64,1},Float64,Int64}
 
     # Initialization
     d::Array{Int64,2} = sum(A, dims=2)
@@ -118,7 +118,7 @@ returns a clustering of the embedded nodes.
 - `community::Array{Int64,1}` membership array
 
 """
-function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, tol::Float64, n_clusters::Int64, n_rep_vec_part::Int64, n_updates::Int64, shape::String, r0::Int64)
+function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, tol::Float64, n_clusters::Int64, n_rep_vec_part::Int64, n_updates::Int64, shape::String, r0::Int64)::Tuple{AbstractArray{Float64,2},Array{Int64,1}}
 
     N = size(A, 1)
     d = sum(A, dims=2)
