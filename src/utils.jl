@@ -9,7 +9,7 @@ rename the community labels by the smallest labels of integers.
 - `community::Array{Int64,1}` renamed array of integers
 
 """
-function rename_com_unique(community::Array{Int64,1})::Array{Int64,1}
+function rename_com_unique(community::Array{Int64,1})#::Array{Int64,1}
 
     N = length(community)
     community_reordered = vec(zeros(Int64, N, 1))
