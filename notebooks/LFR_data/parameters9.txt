@@ -1,0 +1,12 @@
+n=250
+tau1=3
+tau2=1.5
+mu=1.0
+average_degree=5
+min_degree=None
+max_degree=None
+min_community=20
+max_community=None
+tol=1e-07
+max_iters=500
+seed=0
