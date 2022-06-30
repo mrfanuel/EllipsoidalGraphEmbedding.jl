@@ -1,11 +1,11 @@
-n=250
-tau1=3
-tau2=1.5
+n=1000
+tau1=2
+tau2=2
 mu=0.8
-average_degree=5
+average_degree=15
 min_degree=None
-max_degree=None
-min_community=20
+max_degree=50
+min_community=50
 max_community=None
 tol=1e-07
 max_iters=500
