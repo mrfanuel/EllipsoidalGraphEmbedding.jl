@@ -1,5 +1,5 @@
-#/Users/antoine/anaconda3/lib/python3.6/site-packages/ipykernel_launcher.py -f /Users/antoine/Library/Jupyter/runtime/kernel-d686c43f-cf24-4288-ab81-d9e3185cfae9.json
-# GMT Fri Jun  3 08:37:00 2022
+#/Users/mfanuel/Library/Python/3.8/lib/python/site-packages/ipykernel_launcher.py --ip=127.0.0.1 --stdin=9026 --control=9024 --hb=9023 --Session.signature_scheme="hmac-sha256" --Session.key=b"becd27c9-a44b-4392-b4b8-cda968f988df" --shell=9025 --transport="tcp" --iopub=9027 --f=/Users/mfanuel/Library/Jupyter/runtime/kernel-25980cSM1Pea6mMBK.json
+# GMT Thu Jun 30 18:38:40 2022
 # 
 0 43 51 75
 1 218 42 141 70 82 103 154 64 10 172 67 122
@@ -19,12 +19,12 @@
 15 243 102
 16 80 172 197
 17 172 180 192 214 133 78 38 49 111 162 170 232
-18 89 151 22 237 136 172 163
+18 89 151 150 237 136 172 163
 19 66 105 32 30 227
 20 60
 21 222 193 66 168 73
-22 102
-23 160 95
+22 102 41
+23 160 169
 24 69 37 193 120 123 167
 25 243 43 185
 26 164 215
@@ -42,7 +42,7 @@
 38 166
 39 152 87
 40 231 66 176 177 58
-41 150 217 215 194
+41 217 215 194
 42 96 201 147 115
 43 138 122
 44 159 216 135 129
@@ -96,7 +96,7 @@
 92 217 121 235
 93 225 238 146 245 160 144 129 100
 94
-95 112 144 235
+95 112 144 235 150
 96 127 206 119 124
 97 126 143 172
 98 243 237 102
@@ -151,7 +151,7 @@
 147 226
 148 219 230
 149 160 155
-150 171 169 188
+150 171 188
 151 167
 152 191 172
 153
