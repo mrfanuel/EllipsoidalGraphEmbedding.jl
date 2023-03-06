@@ -78,14 +78,19 @@ function partition(A::SparseMatrixCSC{Int64,Int64}, x_embed::AbstractArray{Float
     n_c = length(unique(community))
 
     H_lab = sparse(1:N, community, vec(ones(Int64, N, 1)), N, n_c)
-    Q_best = (1 / s) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / s)
+
+    #Q_best = (1 / s) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / s)
+    Q_best = tr(H_lab' * x_embed' * x_embed * H_lab)#
+    #norm(x_embed * H_lab,2)^2 #tr(H_lab' * x_embed' * x_embed * H_lab)
 
     for _ = 1:it_max
         R1, community1 = update_centroids(x_embed, R, community)
         community1 = rename_com_unique(vec(community1))
         n_c = length(unique(community1))
         H_lab = sparse(1:N, community1, vec(ones(Int64, N, 1)), N, n_c)
-        Q = (1 / s) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / s)
+        #Q = (1 / s) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / s)
+        Q = tr(H_lab' * x_embed' * x_embed * H_lab)
+        #norm(x_embed * H_lab,2)^2  #tr(H_lab' * x_embed' * x_embed * H_lab)
 
         if Q > Q_best
             R = R1
