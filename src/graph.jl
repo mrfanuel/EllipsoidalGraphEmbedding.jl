@@ -49,7 +49,7 @@ function partition(A::SparseMatrixCSC{Int64,Int64}, x_embed::AbstractArray{Float
     d::Array{Int64,2} = sum(A, dims=2)
     s::Int64 = sum(d)
 
-    #Number of nodes
+    # Number of nodes
     N::Int64 = size(x_embed, 2)
 
     # Random points as seeds for communities
@@ -58,7 +58,7 @@ function partition(A::SparseMatrixCSC{Int64,Int64}, x_embed::AbstractArray{Float
     R0 = x_embed[:, index]
     dim::Int64 = size(x_embed, 1)
 
-    ## Construct the initial communities and centroid vectors
+    # Construct the initial communities and centroid vectors
 
     # Here is the first iteration
     community = find_community_membership(x_embed, R0)# Gives as many communities as nodes
@@ -68,7 +68,7 @@ function partition(A::SparseMatrixCSC{Int64,Int64}, x_embed::AbstractArray{Float
     R, community = update_centroids(x_embed, R0, community)
 
 
-    ## Update until stationarity
+    # Update until stationarity
 
     community1 = vec(zeros(Int64, N, 1))
     R1 = zeros(dim, n_clusters)
@@ -126,11 +126,11 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
     d = sum(A, dims=2)
     s = sum(d)
 
-    ############################# ROW NORMALIZATION ###################################################
+    # ROW NORMALIZATION 
     index::Array{Int64,1} = sample(1:N, r0; replace=false, ordered=true)
     H0 = A[:, index] - (1 / s) * d * d[index]'
 
-    #Project on the sphere
+    # Project on the sphere
     H0 = H0./sqrt.(sum(abs2, H0, dims=2));
 
 
@@ -156,7 +156,7 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
     p = vec(d / s)
     n_updates_best::Int64 = 0
 
-    ## keep partition with best modularity
+    # keep partition with best modularity
 
     # initialization
     community, Q, n_updates = partition(A, x_embed, n_updates, n_clusters, p)
