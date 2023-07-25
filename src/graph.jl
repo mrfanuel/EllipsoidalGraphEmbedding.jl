@@ -118,7 +118,7 @@ returns a clustering of the embedded nodes.
 # Output
 - `x_embed::AbstractArray{Float64,2}` array of position vectors
 - `community::Array{Int64,1}` membership array
-- `S::Array{Float64,1}` singular values embedding
+- `S::Vector{Float64}` singular values embedding
 
 """
 function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, tol::Float64, n_clusters::Int64, n_rep_vec_part::Int64, n_updates::Int64, shape::String, r0::Int64)#::Tuple{AbstractArray{Float64,2},Array{Int64,1}}
