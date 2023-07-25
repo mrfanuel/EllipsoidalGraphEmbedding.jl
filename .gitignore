@@ -5,3 +5,12 @@
 /docs/build/
 
 *.DS_Store
+
+/notebooks/data
+
+!/notebooks/data/LFR_NMI
+!/notebooks/data/LFR_NMI_2
+!/notebooks/data/PowerEU
+!/notebooks/data/LFRBenchmarks
+!/notebooks/data/generate_LFR_Benchmarks.ipynb
+
