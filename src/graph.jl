@@ -118,6 +118,7 @@ returns a clustering of the embedded nodes.
 # Output
 - `x_embed::AbstractArray{Float64,2}` array of position vectors
 - `community::Array{Int64,1}` membership array
+- `S::Array{Float64,1}` singular values embedding
 
 """
 function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, tol::Float64, n_clusters::Int64, n_rep_vec_part::Int64, n_updates::Int64, shape::String, r0::Int64)#::Tuple{AbstractArray{Float64,2},Array{Int64,1}}
@@ -172,10 +173,12 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
         end
     end
 
-    H_lab = sparse(1:N, community, vec(ones(Int64, N, 1)), N, n_c)
+    community = rename_com_unique(community)
+    n_com = length(community)
+    H_lab = sparse(1:N, community, vec(ones(Int64, N, 1)), N, n_com)
     modularity = (1 / s) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / s)
 
-    community = rename_com_unique(community)
+    
 
     print("Number of updates: ")
     println(n_updates_best)
@@ -190,7 +193,7 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
     println((S[1:5] .^ 2) / N)
     println(" -------------------------------------------- ")
 
-    return x_embed, community
+    return x_embed, community, S
 
 end
 
