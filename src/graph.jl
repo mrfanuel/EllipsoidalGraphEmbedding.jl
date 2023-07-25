@@ -172,6 +172,9 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
         end
     end
 
+    H_lab = sparse(1:N, community, vec(ones(Int64, N, 1)), N, n_c)
+    modularity = (1 / s) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / s)
+
     community = rename_com_unique(community)
 
     print("Number of updates: ")
@@ -181,7 +184,7 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
     println(n_c_best)
 
     print("Modularity: ")
-    println(Q_best)
+    println(modularity)
     println(" -------------------------------------------- ")
     println("The first 5 squared singular values divided by N : ")
     println((S[1:5] .^ 2) / N)
