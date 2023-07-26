@@ -267,7 +267,7 @@ function spectral_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, it_max::Int64, 
     sum_d = sum(d)
     println("spectral embedding computed")
 
-    # possible test
+    # possible test (passed for PowerEU)
     # using Arpack
     # Q = A - (1 / sum_d) * d * d' 
     # λ, ϕ = eigs(Q, nev = 10, which=:LR)
