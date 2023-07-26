@@ -17,5 +17,8 @@ export
     partition,
     sphere_embed_cluster,
     update_centroids,
-    acc_proj_power_method
+    acc_proj_power_method,
+    mat_vec_prod,
+    gram_schmidt,
+    top_eigenpairs_Q
 end
