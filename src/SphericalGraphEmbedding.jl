@@ -20,5 +20,6 @@ export
     acc_proj_power_method,
     mat_vec_prod,
     gram_schmidt,
-    top_eigenpairs_Q
+    top_eigenpairs_Q,
+    spectral_embed_cluster
 end

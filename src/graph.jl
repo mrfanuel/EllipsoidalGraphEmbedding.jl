@@ -45,9 +45,6 @@ returns a clustering of the embedded nodes.
 """
 function partition(A::SparseMatrixCSC{Int64,Int64}, x_embed::AbstractArray{Float64,2}, it_max::Int64, n_clusters::Int64, p::Array{Float64,1})#::Tuple{Array{Int64,1},Float64,Int64}
 
-    # Initialization
-    d::Array{Int64,2} = sum(A, dims=2)
-    s::Int64 = sum(d)
 
     # Number of nodes
     N::Int64 = size(x_embed, 2)
@@ -157,7 +154,7 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
     p = vec(d / s)
     n_updates_best::Int64 = 0
 
-    # keep partition with best modularity
+    # keep partition with best tr(H_lab' * x_embed' * x_embed * H_lab)
 
     # initialization
     community, Q, n_updates = partition(A, x_embed, n_updates, n_clusters, p)
@@ -241,3 +238,86 @@ function update_centroids(S::AbstractArray{Float64,2}, R0::Array{Float64,2}, com
     return R1, community1
 end
 
+@doc raw"""
+    sphere_embed_cluster(A, n_it_PPM, t, n_clusters, n_rep_vec_part, n_updates, shape, r0)
+returns a clustering of the embedded nodes.
+# Arguments
+- `A::SparseMatrixCSC{Int64,Int64}` adjacency matrix
+- `it_max::Int64` maximum number of iterations of power method with Gram Schmidt
+- `tol::Float64` tolerance for power method
+- `n_clusters::Int64` maximum number of clusters
+- `n_rep_vec_part::Int64` number of repetitions of vector partition
+- `n_updates::Int64` number of updates of vector partition
+- `dim_embed_spectral::Int64` largest number of dimensions for the embedding
+
+# Output
+- `x_embed::AbstractArray{Float64,2}` array of position vectors
+- `community::Array{Int64,1}` membership array
+- `S::Vector{Float64}` eigenvalues spectral embedding
+
+"""
+function spectral_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, it_max::Int64, tol::Float64, n_clusters::Int64, n_rep_vec_part::Int64, n_updates::Int64, dim_embed_spectral::Int64)#::Tuple{AbstractArray{Float64,2},Array{Int64,1}}
+
+    N = size(A, 1)
+    d = sum(A, dims=2)
+
+    eigenvalues , v0 = top_eigenpairs_Q(A,dim_embed_spectral,tol,it_max)
+
+    d = sum(A,dims=2)
+    sum_d = sum(d)
+    println("spectral embedding computed")
+
+    # possible test
+    # using Arpack
+    # Q = A - (1 / sum_d) * d * d' 
+    # λ, ϕ = eigs(Q, nev = 10, which=:LR)
+    # norm(eigenvalues - λ) / norm(eigenvalues)
+
+    # initialization
+
+    Q_best = 0
+    n_c_best = 0
+    n_c = 0
+
+    # Probability mass for sampling the initial centroids
+    sum_d = sum(d)
+
+    p = vec(d / sum_d)
+    n_updates_best = 0
+
+    x_embed = v0'
+
+    # keep partition with tr(H_lab' * x_embed' * x_embed * H_lab)
+
+    # initialization
+    community, Q, n_updates = partition(A, x_embed, n_updates, n_clusters, p)
+
+    for _ = 1:n_rep_vec_part
+        community0, Q, n_updates = partition(A, x_embed, n_updates, n_clusters, p)
+        n_c = length(unique(community0))
+        if Q > Q_best
+            community = community0
+            Q_best = Q
+            n_c_best = n_c
+            n_updates_best = n_updates
+        end
+    end
+
+    community = rename_com_unique(community)
+
+    n_com = length(community)
+    H_lab = sparse(1:N, community, vec(ones(Int64, N, 1)), N, n_com)
+    modularity = (1 / sum_d) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / sum_d)
+
+    print("Number of updates: ")
+    println(n_updates_best)
+
+    print("Number of communities: ")
+    println(n_c_best)
+
+    print("Modularity: ")
+    println(modularity)
+
+    return x_embed, community, eigenvalues
+
+end
