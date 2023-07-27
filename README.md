@@ -1,4 +1,4 @@
-# SphericalGraphEmbedding.jl
+# EllipsoidalGraphEmbedding.jl
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://mrfanuel.github.io/SphericalGraphEmbedding.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://mrfanuel.github.io/SphericalGraphEmbedding.jl/dev)
@@ -8,7 +8,7 @@
 
 ### Documentation
 This is the code associated with the manuscript 
-[Spherical Embedding of graphs](https://github.com/mrfanuel/SphericalGraphEmbedding.jl)
+[Ellipsoidal Embedding of graphs](https://github.com/mrfanuel/SphericalGraphEmbedding.jl)
 by [Michaël Fanuel](https://mrfanuel.github.io/) , [Antoine Aspeel](https://scholar.google.com/citations?user=EDDQMfgAAAAJ&hl=en), [Michael Schaub](https://michaelschaub.github.io/) and [Jean-Charles Delvenne](https://perso.uclouvain.be/jean-charles.delvenne/welcome.html).
 
 ### Install Julia
