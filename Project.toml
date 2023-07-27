@@ -1,4 +1,4 @@
-name = "SphericalGraphEmbedding"
+name = "EllipsoidalGraphEmbedding"
 uuid = "abe9faeb-2622-484d-8e33-db466c9fd899"
 authors = ["Michaël Fanuel <mrfanuel@hotmail.fr> and contributors"]
 version = "0.1.0"

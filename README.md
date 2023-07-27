@@ -16,16 +16,16 @@ by [Michaël Fanuel](https://mrfanuel.github.io/) , [Antoine Aspeel](https://sch
 If you do not have Julia installed, please visit [julialang.org](https://julialang.org/learning/getting-started/)
 ### Installation
 
-[`SphericalGraphEmbedding.jl`](https://github.com/mrfanuel/SphericalGraphEmbedding.jl) is not registered.
+[`EllipsoidalGraphEmbedding.jl`](https://github.com/mrfanuel/EllipsoidalGraphEmbedding.jl) is not registered.
 The way to use it is to type
 
 ```julia
-julia> ]add https://github.com/mrfanuel/SphericalGraphEmbedding.jl
+julia> ]add https://github.com/mrfanuel/EllipsoidalGraphEmbedding.jl
 ```
 
 ### Jupyter notebooks for reproducing the paper figures
 
-You can execute the Jupyter [`notebooks`](https://github.com/mrfanuel/SphericalGraphEmbedding.jl/blob/master/notebooks) to generate the paper figures.
+You can execute the Jupyter [`notebooks`](https://github.com/mrfanuel/EllipsoidalGraphEmbedding.jl/blob/master/notebooks) to generate the paper figures.
 
 
 ### Usage
@@ -33,5 +33,5 @@ You can execute the Jupyter [`notebooks`](https://github.com/mrfanuel/SphericalG
 To use this functions of this package, simply type
 
 ```julia
-julia> using SphericalGraphEmbedding
+julia> using EllipsoidalGraphEmbedding
 ```

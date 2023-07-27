@@ -1,16 +1,16 @@
-using SphericalGraphEmbedding
+using EllipsoidalGraphEmbedding
 using Documenter
 
-DocMeta.setdocmeta!(SphericalGraphEmbedding, :DocTestSetup, :(using SphericalGraphEmbedding); recursive=true)
+DocMeta.setdocmeta!(EllipsoidalGraphEmbedding, :DocTestSetup, :(using EllipsoidalGraphEmbedding); recursive=true)
 
 makedocs(;
-    modules=[SphericalGraphEmbedding],
+    modules=[EllipsoidalGraphEmbedding],
     authors="Michaël Fanuel <mrfanuel@hotmail.fr> and contributors",
-    repo="https://github.com/mrfanuel/SphericalGraphEmbedding.jl/blob/{commit}{path}#{line}",
-    sitename="SphericalGraphEmbedding.jl",
+    repo="https://github.com/mrfanuel/EllipsoidalGraphEmbedding.jl/blob/{commit}{path}#{line}",
+    sitename="EllipsoidalGraphEmbedding.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://mrfanuel.github.io/SphericalGraphEmbedding.jl",
+        canonical="https://mrfanuel.github.io/EllipsoidalGraphEmbedding.jl",
         assets=String[],
     ),
     pages=[
@@ -19,6 +19,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/mrfanuel/SphericalGraphEmbedding.jl",
+    repo="github.com/mrfanuel/EllipsoidalGraphEmbedding.jl",
     devbranch="main",
 )

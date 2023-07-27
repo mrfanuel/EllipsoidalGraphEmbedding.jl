@@ -1,6 +1,6 @@
-using SphericalGraphEmbedding
+using EllipsoidalGraphEmbedding
 using Test
 
-@testset "SphericalGraphEmbedding.jl" begin
+@testset "EllipsoidalGraphEmbedding.jl" begin
     # Write your tests here.
 end
