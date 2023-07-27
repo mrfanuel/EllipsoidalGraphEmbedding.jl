@@ -63,6 +63,6 @@ jobs:
       - run: |
           julia --project=docs -e '
             using Documenter: DocMeta, doctest
-            using SphericalGraphEmbedding
-            DocMeta.setdocmeta!(SphericalGraphEmbedding, :DocTestSetup, :(using SphericalGraphEmbedding); recursive=true)
-            doctest(SphericalGraphEmbedding)'
+            using EllipsoidalGraphEmbedding
+            DocMeta.setdocmeta!(EllipsoidalGraphEmbedding, :DocTestSetup, :(using EllipsoidalGraphEmbedding); recursive=true)
+            doctest(EllipsoidalGraphEmbedding)'

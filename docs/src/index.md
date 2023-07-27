@@ -1,14 +1,14 @@
 ```@meta
-CurrentModule = SphericalGraphEmbedding
+CurrentModule = EllipsoidalGraphEmbedding
 ```
 
-# SphericalGraphEmbedding
+# EllipsoidalGraphEmbedding
 
-Documentation for [SphericalGraphEmbedding](https://github.com/mrfanuel/SphericalGraphEmbedding.jl).
+Documentation for [EllipsoidalGraphEmbedding](https://github.com/mrfanuel/EllipsoidalGraphEmbedding.jl).
 
 ```@index
 ```
 
 ```@autodocs
-Modules = [SphericalGraphEmbedding]
+Modules = [EllipsoidalGraphEmbedding]
 ```

@@ -1,4 +1,4 @@
-module SphericalGraphEmbedding
+module EllipsoidalGraphEmbedding
 
 using Distributions
 using SparseArrays

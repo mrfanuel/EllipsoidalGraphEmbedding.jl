@@ -84,7 +84,7 @@ uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
 [[Sockets]]
 uuid = "6462fe0b-24de-5631-8697-dd941f90decc"
 
-[[SphericalGraphEmbedding]]
+[[EllipsoidalGraphEmbedding]]
 path = ".."
 uuid = "abe9faeb-2622-484d-8e33-db466c9fd899"
 version = "0.1.0"
