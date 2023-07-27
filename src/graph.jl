@@ -186,8 +186,13 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
     print("Modularity: ")
     println(modularity)
     println(" -------------------------------------------- ")
-    println("The first 5 squared singular values divided by N : ")
-    println((S[1:5] .^ 2) / N)
+    if r0 >= 5
+        println("The first 5 squared singular values divided by N : ")
+        println((S[1:5] .^ 2) / N)
+    else
+        println("The squared singular values divided by N : ")
+        println((S .^ 2) / N)
+    end
     println(" -------------------------------------------- ")
 
     return x_embed, community, S
