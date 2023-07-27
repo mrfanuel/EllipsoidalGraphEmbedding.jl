@@ -27,7 +27,7 @@ julia> ]add https://github.com/mrfanuel/EllipsoidalGraphEmbedding.jl
 
 You can execute the Jupyter [`notebooks`](https://github.com/mrfanuel/EllipsoidalGraphEmbedding.jl/blob/master/notebooks) to generate the paper figures.
 
-- [spherical_embedding_plots.ipynb](https://github.com/mrfanuel/EllipsoidalGraphEmbedding.jl/blob/main/notebooks/spherical_embedding_plots.ipynb) reproduces Figure 1.1 and Figure 1.2.
+- [spherical_embedding_plots.ipynb](https://github.com/mrfanuel/EllipsoidalGraphEmbedding.jl/blob/main/notebooks/spherical_embedding_plots.ipynb) reproduces Figure 1.1, Figure 1.2 and Figure 4.1.
 - [nmi_analysis.ipynb](https://github.com/mrfanuel/EllipsoidalGraphEmbedding.jl/blob/main/notebooks/nmi_analysis.ipynb) yields Figure 4.2 and Figure C.1.
 - [ppm.ipynb](https://github.com/mrfanuel/EllipsoidalGraphEmbedding.jl/blob/main/notebooks/ppm.ipynb) gives Figure B.1.
 - [real_networks_benchmark.ipynb](https://github.com/mrfanuel/EllipsoidalGraphEmbedding.jl/blob/main/notebooks/real_networks_benchmark.ipynb) produces results of ellipsoidal and spectral embeddings in Table C.2.
