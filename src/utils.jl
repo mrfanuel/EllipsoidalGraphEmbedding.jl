@@ -107,3 +107,19 @@ function top_eigenpairs_Q(A,r,tol,it_max)
 
     return eigenvalues , v0
 end
+
+function dim_eff(singular,epsilon)
+
+    s = 0
+    s_tot = sum(singular.^2)
+    d_eff = length(singular)
+    for i = 1:length(singular)
+        s += singular[i]^2
+        p = s/s_tot
+        if p > 1 - epsilon 
+            d_eff = i
+            break
+        end
+    end
+    return d_eff
+end
