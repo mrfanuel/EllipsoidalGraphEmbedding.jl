@@ -21,5 +21,8 @@ export
     mat_vec_prod,
     gram_schmidt,
     top_eigenpairs_Q,
-    spectral_embed_cluster
+    spectral_embed_cluster,
+    dim_eff,
+    adj_matrix_cc,
+    largest_cc_from_adj
 end

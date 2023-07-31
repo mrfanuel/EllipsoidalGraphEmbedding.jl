@@ -64,7 +64,6 @@ function top_eigenpairs_Q(A,r,tol,it_max)
 
     N = size(A)[1]
     d = sum(A,dims=2)
-    sum_d = sum(d)
 
     # Preprocessing: compute shift, i.e.,
     # an estimate of absolute largest eigenvalue
@@ -75,7 +74,7 @@ function top_eigenpairs_Q(A,r,tol,it_max)
 
     n=0
     shift = 0
-    for it = 1:30
+    for _ = 1:30
         v0 = mat_vec_prod(A,v0,d,shift)
         n = norm(v0)
         v0 = v0 / n
@@ -112,8 +111,9 @@ function dim_eff(singular,epsilon)
 
     s = 0
     s_tot = sum(singular.^2)
-    d_eff = length(singular)
-    for i = 1:length(singular)
+    l = length(singular)
+    d_eff = l
+    for i = 1:l
         s += singular[i]^2
         p = s/s_tot
         if p > 1 - epsilon 
@@ -122,4 +122,40 @@ function dim_eff(singular,epsilon)
         end
     end
     return d_eff
+end
+
+function adj_matrix_cc(list)
+    dim0 = size(list)
+    M_int = zeros(Int64,dim0[1],2)
+    for i = 1:dim0[1]
+        for j = 1:2
+            M_int[i,j] = Int64(list[i,j])
+        end
+    end
+
+    N = maximum([maximum(M_int[:,1]),maximum(M_int[:,2])])
+    A0 = spzeros(N,N)
+    A0 = sparse(M_int[:,1],M_int[:,2],vec(ones(Int64,dim0[1],1)),N,N)
+    A0 = A0 + A0'
+    A,_ = largest_component(A0)
+    A0 = 0;M_int = 0
+    return A
+end
+
+function largest_cc_from_adj(A0)
+
+    dim0 = size(A0)
+    A  = zeros(Int64 ,dim0[1],dim0[1])
+
+    for i = 1:dim0[1]
+        for j = 1:dim0[1]
+            A[i,j] = Int64(A0[i,j])
+        end
+    end
+    A0 = 0
+    A = A+A'
+    A = sparse(A)
+
+    A,_ = largest_component(A)
+    return A
 end

@@ -27,11 +27,10 @@ end
 
 
 @doc raw"""
-partition(A, x_embed, it_max, n_clusters, p)
+partition(x_embed, it_max, n_clusters, p)
 
 returns a clustering of the embedded nodes.
 # Arguments
-- `A::SparseMatrixCSC{Int64,Int64}` adjacency matrix
 - `x_embed::AbstractArray{Float64,2}` array of position vectors
 - `it_max::Int64` maximum number of iterations
 - `n_clusters::Int64` maximum number of clusters
@@ -43,7 +42,7 @@ returns a clustering of the embedded nodes.
 - `n_updates::Float64` number of centroid updates to reach stationarity
 
 """
-function partition(A::SparseMatrixCSC{Int64,Int64}, x_embed::AbstractArray{Float64,2}, it_max::Int64, n_clusters::Int64, p::Array{Float64,1})#::Tuple{Array{Int64,1},Float64,Int64}
+function partition(x_embed::AbstractArray{Float64,2}, it_max::Int64, n_clusters::Int64, p::Array{Float64,1})#::Tuple{Array{Int64,1},Float64,Int64}
 
 
     # Number of nodes
@@ -118,7 +117,7 @@ returns a clustering of the embedded nodes.
 - `S::Vector{Float64}` singular values embedding
 
 """
-function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, tol::Float64, n_clusters::Int64, n_rep_vec_part::Int64, n_updates::Int64, shape::String, r0::Int64)#::Tuple{AbstractArray{Float64,2},Array{Int64,1}}
+function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, tol::Float64, n_clusters::Int64, n_rep_vec_part::Int64, n_updates::Int64, shape::String, r0::Int64,descriptor::String = "Modularity")#::Tuple{AbstractArray{Float64,2},Array{Int64,1}}
 
     N = size(A, 1)
     d = sum(A, dims=2)
@@ -133,7 +132,7 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
 
 
     println(" ------- Acc Projected Power Iteration -------")
-    H0 = @time acc_proj_power_method(A, H0, n_it_PPM, tol)
+    H0 = @time acc_proj_power_method(A, H0, n_it_PPM, tol, descriptor)
     U, S, _ = svd(H0)
     println(" -------------- Clustering ------- ")
     dim::Int64 = length(S)
@@ -157,10 +156,10 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
     # keep partition with best tr(H_lab' * x_embed' * x_embed * H_lab)
 
     # initialization
-    community, Q, n_updates = partition(A, x_embed, n_updates, n_clusters, p)
+    community, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
 
     for _ = 1:n_rep_vec_part
-        community0, Q, n_updates = partition(A, x_embed, n_updates, n_clusters, p)
+        community0, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
         n_c = length(unique(community0))
         if Q > Q_best
             community = community0
@@ -169,22 +168,21 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, 
             n_updates_best = n_updates
         end
     end
+    print("Number of updates: ")
+    println(n_updates_best)
 
     community = rename_com_unique(community)
     n_com = length(community)
+    
     H_lab = sparse(1:N, community, vec(ones(Int64, N, 1)), N, n_com)
     modularity = (1 / s) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / s)
-
-    
-
-    print("Number of updates: ")
-    println(n_updates_best)
+    print("Modularity: ")
+    println(modularity)
 
     print("Number of communities: ")
     println(n_c_best)
 
-    print("Modularity: ")
-    println(modularity)
+
     println(" -------------------------------------------- ")
     if r0 >= 5
         println("The first 5 squared singular values divided by N : ")
@@ -295,10 +293,10 @@ function spectral_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, it_max::Int64, 
     # keep partition with tr(H_lab' * x_embed' * x_embed * H_lab)
 
     # initialization
-    community, Q, n_updates = partition(A, x_embed, n_updates, n_clusters, p)
+    community, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
 
     for _ = 1:n_rep_vec_part
-        community0, Q, n_updates = partition(A, x_embed, n_updates, n_clusters, p)
+        community0, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
         n_c = length(unique(community0))
         if Q > Q_best
             community = community0
@@ -314,14 +312,11 @@ function spectral_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, it_max::Int64, 
     H_lab = sparse(1:N, community, vec(ones(Int64, N, 1)), N, n_com)
     modularity = (1 / sum_d) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / sum_d)
 
-    print("Number of updates: ")
-    println(n_updates_best)
+    print("Number of updates: ", n_updates_best)
 
-    print("Number of communities: ")
-    println(n_c_best)
+    println("Number of communities: ", n_c_best)
 
-    print("Modularity: ")
-    println(modularity)
+    print("Modularity: ", modularity)
 
     return x_embed, community, eigenvalues
 
