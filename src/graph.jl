@@ -282,7 +282,8 @@ function spectral_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, it_max::Int64, 
     p = vec(d / sum_d)
     # initialization
     modularities = zeros(dim_embed_spectral,1)
-    communities = zeros(dim_embed_spectral,1)
+    communities = zeros(dim_embed_spectral,N)
+    nb_communities = zeros(dim_embed_spectral,1)
 
     for n_ev = 1:dim_embed_spectral
         Q_best = 0
@@ -316,11 +317,13 @@ function spectral_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, it_max::Int64, 
         modularity = (1 / sum_d) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / sum_d)
 
         modularities[n_ev] = modularity
-        communities[n_ev] = n_c_best
+        nb_communities[n_ev] = n_c_best
+        communities[n_ev,:] = community
     end
 
     mod_best, n_ev_best = findmax(modularities)
-
+    x_embed = (v0[:,1:n_ev_best])'
+    community = communities[n_ev_best,:]
     println("Number of eigenvector for best modularity: ", n_ev_best)
     println("Number of communities: ", communities[n_ev_best])
     print("Modularity: ", mod_best)
