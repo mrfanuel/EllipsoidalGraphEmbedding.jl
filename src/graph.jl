@@ -276,47 +276,54 @@ function spectral_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, it_max::Int64, 
     # λ, ϕ = eigs(Q, nev = 10, which=:LR)
     # norm(eigenvalues - λ) / norm(eigenvalues)
 
-    # initialization
-
-    Q_best = 0
-    n_c_best = 0
-    n_c = 0
-
     # Probability mass for sampling the initial centroids
     sum_d = sum(d)
 
     p = vec(d / sum_d)
-    n_updates_best = 0
-
-    x_embed = v0'
-
-    # keep partition with tr(H_lab' * x_embed' * x_embed * H_lab)
-
     # initialization
-    community, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
+    modularities = zeros(dim_embed_spectral,1)
+    communities = zeros(dim_embed_spectral,1)
 
-    for _ = 1:n_rep_vec_part
-        community0, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
-        n_c = length(unique(community0))
-        if Q > Q_best
-            community = community0
-            Q_best = Q
-            n_c_best = n_c
-            n_updates_best = n_updates
+    for n_ev = 1:dim_embed_spectral
+        Q_best = 0
+        n_c_best = 0
+        n_c = 0
+
+        n_updates_best = 0
+
+        x_embed = (v0[:,1:n_ev])'
+
+        # keep partition with tr(H_lab' * x_embed' * x_embed * H_lab)
+
+        # initialization
+        community, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
+
+        for _ = 1:n_rep_vec_part
+            community0, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
+            n_c = length(unique(community0))
+            if Q > Q_best
+                community = community0
+                Q_best = Q
+                n_c_best = n_c
+                n_updates_best = n_updates
+            end
         end
+
+        community = rename_com_unique(community)
+
+        n_com = length(community)
+        H_lab = sparse(1:N, community, vec(ones(Int64, N, 1)), N, n_com)
+        modularity = (1 / sum_d) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / sum_d)
+
+        modularities[n_ev] = modularity
+        communities[n_ev] = n_c_best
     end
 
-    community = rename_com_unique(community)
+    mod_best, n_ev_best = findmax(modularities)
 
-    n_com = length(community)
-    H_lab = sparse(1:N, community, vec(ones(Int64, N, 1)), N, n_com)
-    modularity = (1 / sum_d) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / sum_d)
-
-    print("Number of updates: ", n_updates_best)
-
-    println("Number of communities: ", n_c_best)
-
-    print("Modularity: ", modularity)
+    println("Number of eigenvector for best modularity: ", n_ev_best)
+    println("Number of communities: ", communities[n_ev_best])
+    print("Modularity: ", mod_best)
 
     return x_embed, community, eigenvalues
 
