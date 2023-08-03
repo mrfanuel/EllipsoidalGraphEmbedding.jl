@@ -103,21 +103,22 @@ end
 returns a clustering of the embedded nodes.
 # Arguments
 - `A::SparseMatrixCSC{Int64,Int64}` adjacency matrix
+- `r0::Int64` largest number of dimensions for the embedding
+- `shape::String` "Spherical" or "Ellipsoidal"
+- `n_clusters::Int64` maximum number of clusters
+
 - `n_it_PPM::Int64` maximum number of iterations for project power method (PPM)
 - `tol::Float64` tolerance for relative objective variation for PPM
-- `n_clusters::Int64` maximum number of clusters
 - `n_rep_vec_part::Int64` number of repetitions of vector partition
 - `n_updates::Int64` number of updates of vector partition
-- `shape::String` spherical or ellipsoidal embedding
-- `r0::Int64` largest number of dimensions for the embedding
-
+- `descriptor::String` = "Modularity" or "Laplacian"
 # Output
 - `x_embed::AbstractArray{Float64,2}` array of position vectors
 - `community::Array{Int64,1}` membership array
 - `S::Vector{Float64}` singular values embedding
 
 """
-function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, n_it_PPM::Int64, tol::Float64, n_clusters::Int64, n_rep_vec_part::Int64, n_updates::Int64, shape::String, r0::Int64,descriptor::String = "Modularity")#::Tuple{AbstractArray{Float64,2},Array{Int64,1}}
+function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, r0::Int64, shape::String,n_clusters::Int64, n_it_PPM::Int64 = 30000, tol::Float64 = 1e-8,  n_rep_vec_part::Int64 = 5, n_updates::Int64 = 50,descriptor::String = "Modularity")#::Tuple{AbstractArray{Float64,2},Array{Int64,1}}
 
     N = size(A, 1)
     d = sum(A, dims=2)
@@ -246,12 +247,13 @@ end
 returns a clustering of the embedded nodes.
 # Arguments
 - `A::SparseMatrixCSC{Int64,Int64}` adjacency matrix
+- `dim_embed_spectral::Int64` largest number of dimensions for the embedding
+- `n_clusters::Int64` maximum number of clusters
 - `it_max::Int64` maximum number of iterations of power method with Gram Schmidt
 - `tol::Float64` tolerance for power method
-- `n_clusters::Int64` maximum number of clusters
 - `n_rep_vec_part::Int64` number of repetitions of vector partition
 - `n_updates::Int64` number of updates of vector partition
-- `dim_embed_spectral::Int64` largest number of dimensions for the embedding
+
 
 # Output
 - `x_embed::AbstractArray{Float64,2}` array of position vectors
@@ -259,12 +261,14 @@ returns a clustering of the embedded nodes.
 - `S::Vector{Float64}` eigenvalues spectral embedding
 
 """
-function spectral_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, it_max::Int64, tol::Float64, n_clusters::Int64, n_rep_vec_part::Int64, n_updates::Int64, dim_embed_spectral::Int64)#::Tuple{AbstractArray{Float64,2},Array{Int64,1}}
+tol = 1e-06
+it_max = 1000
+function spectral_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, dim_embed_spectral::Int64, n_clusters::Int64, it_max::Int64=1000, tol::Float64=1e-06, n_rep_vec_part::Int64= 5, n_updates::Int64=50)#::Tuple{AbstractArray{Float64,2},Array{Int64,1}}
 
     N = size(A, 1)
     d = sum(A, dims=2)
 
-    eigenvalues , v0 = top_eigenpairs_Q(A,dim_embed_spectral,tol,it_max)
+    eigenvalues , v0 = @time top_eigenpairs_Q(A,dim_embed_spectral,tol,it_max)
 
     d = sum(A,dims=2)
     sum_d = sum(d)
@@ -291,42 +295,46 @@ function spectral_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, it_max::Int64, 
         n_c = 0
 
         n_updates_best = 0
+        if n_ev > 1
+            x_embed = (v0[:,1:n_ev])'
 
-        x_embed = (v0[:,1:n_ev])'
+            # keep partition with tr(H_lab' * x_embed' * x_embed * H_lab)
 
-        # keep partition with tr(H_lab' * x_embed' * x_embed * H_lab)
+            # initialization
+            community, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
 
-        # initialization
-        community, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
-
-        for _ = 1:n_rep_vec_part
-            community0, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
-            n_c = length(unique(community0))
-            if Q > Q_best
-                community = community0
-                Q_best = Q
-                n_c_best = n_c
-                n_updates_best = n_updates
+            for _ = 1:n_rep_vec_part
+                community0, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
+                n_c = length(unique(community0))
+                if Q > Q_best
+                    community = community0
+                    Q_best = Q
+                    n_c_best = n_c
+                    n_updates_best = n_updates
+                end
             end
+
+            community = rename_com_unique(community)
+
+            n_com = length(community)
+            H_lab = sparse(1:N, community, vec(ones(Int64, N, 1)), N, n_com)
+            modularity = (1 / sum_d) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / sum_d)
+
+            modularities[n_ev] = modularity
+            nb_communities[n_ev] = n_c
+            communities[n_ev,:] = community
         end
-
-        community = rename_com_unique(community)
-
-        n_com = length(community)
-        H_lab = sparse(1:N, community, vec(ones(Int64, N, 1)), N, n_com)
-        modularity = (1 / sum_d) * (tr(H_lab' * A * H_lab) - (norm(d' * H_lab, 2)^2) / sum_d)
-
-        modularities[n_ev] = modularity
-        nb_communities[n_ev] = n_c_best
-        communities[n_ev,:] = community
     end
 
     mod_best, n_ev_best = findmax(modularities)
-    x_embed = (v0[:,1:n_ev_best])'
+
+    x_embed = v0'
     community = communities[n_ev_best,:]
+    r = vec(1:N)
+    n_ev_best = r[n_ev_best]
     println("Number of eigenvector for best modularity: ", n_ev_best)
-    println("Number of communities: ", communities[n_ev_best])
-    print("Modularity: ", mod_best)
+    println("Number of communities: ", nb_communities[n_ev_best])
+    println("Modularity: ", mod_best)
 
     return x_embed, community, eigenvalues
 
