@@ -38,7 +38,7 @@ returns a clustering of the embedded nodes.
 
 # Output
 - `community::Array{Int64,1}` membership array
-- `Q_best::Float64` modularity of the partition
+- `Obj_best::Float64` objective of the best partition
 - `n_updates::Float64` number of centroid updates to reach stationarity
 
 """
@@ -75,7 +75,7 @@ function partition(x_embed::AbstractArray{Float64,2}, it_max::Int64, n_clusters:
 
     H_lab = sparse(1:N, community, vec(ones(Int64, N, 1)), N, n_c)
 
-    Q_best = tr(H_lab' * x_embed' * x_embed * H_lab)
+    Obj_best = tr(H_lab' * x_embed' * x_embed * H_lab)
 
     for _ = 1:it_max
         R1, community1 = update_centroids(x_embed, R, community)
@@ -83,19 +83,19 @@ function partition(x_embed::AbstractArray{Float64,2}, it_max::Int64, n_clusters:
         n_c = length(unique(community1))
         H_lab = sparse(1:N, community1, vec(ones(Int64, N, 1)), N, n_c)
 
-        Q = tr(H_lab' * x_embed' * x_embed * H_lab)
+        Obj = tr(H_lab' * x_embed' * x_embed * H_lab)
 
-        if Q > Q_best
+        if Obj > Obj_best
             R = R1
             community = community1
-            Q_best = Q
+            Obj_best = Obj
             n_updates = n_updates + 1
         else
             break
         end
     end
 
-    return community, Q_best, n_updates
+    return community, Obj_best, n_updates
 end
 
 @doc raw"""
@@ -146,7 +146,7 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, r0::Int64, shape:
         x_embed = (U[:, 1:dim])'
     end
 
-    Q_best::Float64 = 0
+    Obj_best::Float64 = 0
     n_c_best::Int64 = 0
     n_c::Int64 = 0
 
@@ -157,14 +157,14 @@ function sphere_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, r0::Int64, shape:
     # keep partition with best tr(H_lab' * x_embed' * x_embed * H_lab)
 
     # initialization
-    community, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
+    community, Obj, n_updates = partition(x_embed, n_updates, n_clusters, p)
 
     for _ = 1:n_rep_vec_part
-        community0, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
+        community0, Obj, n_updates = partition(x_embed, n_updates, n_clusters, p)
         n_c = length(unique(community0))
-        if Q > Q_best
+        if Obj > Obj_best
             community = community0
-            Q_best = Q
+            Obj_best = Obj
             n_c_best = n_c
             n_updates_best = n_updates
         end
@@ -290,7 +290,7 @@ function spectral_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, dim_embed_spect
     nb_communities = zeros(dim_embed_spectral,1)
 
     for n_ev = 1:dim_embed_spectral
-        Q_best = 0
+        Obj_best = 0
         n_c_best = 0
         n_c = 0
 
@@ -301,14 +301,14 @@ function spectral_embed_cluster(A::SparseMatrixCSC{Int64,Int64}, dim_embed_spect
             # keep partition with tr(H_lab' * x_embed' * x_embed * H_lab)
 
             # initialization
-            community, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
+            community, Obj, n_updates = partition(x_embed, n_updates, n_clusters, p)
 
             for _ = 1:n_rep_vec_part
-                community0, Q, n_updates = partition(x_embed, n_updates, n_clusters, p)
+                community0, Obj, n_updates = partition(x_embed, n_updates, n_clusters, p)
                 n_c = length(unique(community0))
-                if Q > Q_best
+                if Obj > Obj_best
                     community = community0
-                    Q_best = Q
+                    Obj_best = Obj
                     n_c_best = n_c
                     n_updates_best = n_updates
                 end
