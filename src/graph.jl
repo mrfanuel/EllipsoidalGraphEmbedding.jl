@@ -99,11 +99,11 @@ function partition(x_embed::AbstractArray{Float64,2}, it_max::Int64, n_clusters:
 end
 
 @doc raw"""
-    sphere_embed_cluster(A, n_it_PPM, t, n_clusters, n_rep_vec_part, n_updates, shape, r0)
+    sphere_embed_cluster(A, d0, shape,n_clusters, n_it_PPM, tol,  n_rep_vec_part, n_updates,descriptor)
 returns a clustering of the embedded nodes.
 # Arguments
 - `A::SparseMatrixCSC{Int64,Int64}` adjacency matrix
-- `r0::Int64` largest number of dimensions for the embedding
+- `d0::Int64` largest number of dimensions for the embedding
 - `shape::String` "Spherical" or "Ellipsoidal"
 - `n_clusters::Int64` maximum number of clusters
 

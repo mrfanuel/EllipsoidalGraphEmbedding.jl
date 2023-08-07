@@ -6,6 +6,7 @@
 
 *.DS_Store
 
+/notebooks/zachary.ipynb
 /notebooks/data
 /notebooks/figures
 /notebooks/louvain_node2vec/edge_lists
