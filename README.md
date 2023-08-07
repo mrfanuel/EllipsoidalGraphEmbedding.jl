@@ -34,7 +34,7 @@ You can execute the Jupyter [`notebooks`](https://github.com/mrfanuel/Ellipsoida
 
 ### Usage
 
-To use this functions of this package, simply type
+To use the functions of this module, simply type
 
 ```julia
 julia> using EllipsoidalGraphEmbedding
