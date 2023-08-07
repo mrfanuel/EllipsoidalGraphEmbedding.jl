@@ -8,8 +8,8 @@
 
 /notebooks/data
 /notebooks/figures
-/notebooks/louvain/edge_lists
-/notebooks/louvain/emb
+/notebooks/louvain_node2vec/edge_lists
+/notebooks/louvain_node2vec/emb
 
 
 !/notebooks/data/LFR_NMI
