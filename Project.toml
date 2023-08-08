@@ -35,6 +35,7 @@ x264_jll = "1270edf5-f2f9-52d2-97e9-ab00b5d0237a"
 
 [compat]
 JuliaFormatter = "1"
+PGFPlotsX = "1"
 julia = "1.6"
 
 [extras]
