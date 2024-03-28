@@ -8,7 +8,7 @@
 
 ### Documentation
 This is the code associated with the manuscript 
-[Ellipsoidal Embedding of graphs](https://github.com/mrfanuel/SphericalGraphEmbedding.jl)
+[Ellipsoidal Embedding of graphs](http://arxiv.org/abs/2403.15023)
 by [Michaël Fanuel](https://mrfanuel.github.io/) , [Antoine Aspeel](https://scholar.google.com/citations?user=EDDQMfgAAAAJ&hl=en), [Michael Schaub](https://michaelschaub.github.io/) and [Jean-Charles Delvenne](https://perso.uclouvain.be/jean-charles.delvenne/welcome.html).
 
 ### Install Julia
