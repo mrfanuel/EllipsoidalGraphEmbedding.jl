@@ -34,6 +34,7 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 x264_jll = "1270edf5-f2f9-52d2-97e9-ab00b5d0237a"
 
 [compat]
+GraphPlot = "0.6"
 JuliaFormatter = "1"
 julia = "1.6"
 
